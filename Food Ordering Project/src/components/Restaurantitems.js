@@ -1,0 +1,86 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { fetchRestaurantsById, fetchMenuItemsById } from '../actions/allActions';
+
+
+class Restaurantitems extends Component {
+
+
+
+    componentDidMount() {
+        this.props.fetchRestaurantsById(this.props.match.params.restaurantId)
+        this.props.fetchMenuItemsById(this.props.match.params.restaurantId)
+
+    }
+
+
+
+
+    mapMenuItems() {
+        const menuItemCards = this.props.menuItems.map((menuItem, index) =>
+            <div className="card my-3" key={index}>
+                <div className="row no-gutters">
+                    <div className="col-sm-2">
+                        <img src={menuItem.itemImg} className="card-img border" alt="" style={{ width: 114, height: 100 }} />
+                    </div>
+                    <div className="col-sm-7 d-flex">
+                        <div className="card-body">
+                            <h6 className="card-title">{menuItem.itemName}</h6>
+                            <p className="card-text text-secondary"><i className="fas fa-rupee-sign mr-1"></i>{menuItem.itemPrice}</p>
+                        </div>
+                    </div>
+                    <div className="col-sm d-flex align-items-center justify-content-end pr-3">
+                        <button className="btn btn-outline-primary btn-sm mr-2">
+                            <i className="fas fa-minus text-muted"></i>
+                        </button>
+                        0
+                        <button className="btn  btn-outline-primary btn-sm ml-2">
+                            <i className="fas fa-plus text-muted"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )
+        return menuItemCards
+    }
+
+
+
+    render() {
+        return (
+            <React.Fragment>
+                <div className="container">
+                    <div className="card card-body bg-warning mt-3">
+                        <div className="row">
+                            <div className="col-sm-2">
+                                <img src={this.props.restaurant.restaurantImg} alt="" className="img-fluid" />
+                            </div>
+                            <div className="col-sm">
+                                <p className="h2 text-dark mb-2">{this.props.restaurant.restaurantName}</p>
+                                <hr />
+                                <p className=" text-dark mb-2"><i className="fas fa-utensils mr-2"></i>{this.props.restaurant.restaurantSpeciality}</p>
+                                <footer className="blockquote-footer text-dark font-italic"><i className="fas fa-map-marker-alt mr-2"></i>{this.props.restaurant.restaurantAddress}</footer>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="container col-6">
+                    <h4 className="text-left text-dark mt-4 mb-2">Eat as much as you WANT <del>not CAN.</del></h4>
+                    <hr />
+                    {this.mapMenuItems()}
+                </div>
+            </React.Fragment>
+        );
+    }
+}
+
+
+
+const mapStateToProps = state => ({
+    restaurant: state.reducer.restaurant,
+    menuItems: state.reducer.menuItems
+});
+
+
+
+export default connect(mapStateToProps, { fetchRestaurantsById, fetchMenuItemsById })(Restaurantitems);
